@@ -1,0 +1,272 @@
+{
+    "title": "Global Sustainability & Supply Chain 360",
+    "pages": [
+        {
+            "id": "page1",
+            "name": "Executive ESG Overview",
+            "displayName": "Executive ESG Overview",
+            "visuals": [
+                {
+                    "id": "kpi1",
+                    "name": "Carbon vs Target",
+                    "displayName": "Carbon vs Target",
+                    "type": "kpi",
+                    "bounds": {
+                        "x": 0.05,
+                        "y": 0.05,
+                        "width": 0.3,
+                        "height": 0.2
+                    },
+                    "table": "Carbon_Ops",
+                    "dimensions": [
+                        "Date"
+                    ],
+                    "measures": [
+                        "Total Carbon",
+                        "Carbon Target"
+                    ],
+                    "filters": [],
+                    "properties": {}
+                },
+                {
+                    "id": "card1",
+                    "name": "Total Fuel Spend",
+                    "displayName": "Total Fuel Spend",
+                    "type": "card",
+                    "bounds": {
+                        "x": 0.36,
+                        "y": 0.05,
+                        "width": 0.3,
+                        "height": 0.2
+                    },
+                    "table": "Carbon_Ops",
+                    "dimensions": [],
+                    "measures": [
+                        "Total Fuel Spend"
+                    ],
+                    "filters": [],
+                    "properties": {}
+                },
+                {
+                    "id": "slicer1",
+                    "name": "Filter by Region",
+                    "displayName": "Filter by Region",
+                    "type": "slicer",
+                    "bounds": {
+                        "x": 0.67,
+                        "y": 0.05,
+                        "width": 0.28,
+                        "height": 0.2
+                    },
+                    "table": "Geography",
+                    "dimensions": [
+                        "Region"
+                    ],
+                    "measures": [],
+                    "filters": [],
+                    "properties": {}
+                },
+                {
+                    "id": "column1",
+                    "name": "Monthly Emission Trend",
+                    "displayName": "Monthly Emission Trend",
+                    "type": "column",
+                    "bounds": {
+                        "x": 0.05,
+                        "y": 0.3,
+                        "width": 0.45,
+                        "height": 0.3
+                    },
+                    "table": "Carbon_Ops",
+                    "dimensions": [
+                        "Date"
+                    ],
+                    "measures": [
+                        "Total Carbon"
+                    ],
+                    "filters": [],
+                    "properties": {
+                        "stacked": false
+                    }
+                },
+                {
+                    "id": "waterfall1",
+                    "name": "Emission Breakdown",
+                    "displayName": "Emission Breakdown by Carrier",
+                    "type": "waterfall",
+                    "bounds": {
+                        "x": 0.51,
+                        "y": 0.3,
+                        "width": 0.44,
+                        "height": 0.3
+                    },
+                    "table": "Geography",
+                    "dimensions": [
+                        "Carrier"
+                    ],
+                    "measures": [
+                        "Total Carbon"
+                    ],
+                    "filters": [],
+                    "properties": {}
+                },
+                {
+                    "id": "donut1",
+                    "name": "Spend by Region",
+                    "displayName": "Spend by Region",
+                    "type": "donut",
+                    "bounds": {
+                        "x": 0.05,
+                        "y": 0.65,
+                        "width": 0.3,
+                        "height": 0.3
+                    },
+                    "table": "Geography",
+                    "dimensions": [
+                        "Region"
+                    ],
+                    "measures": [
+                        "Total Fuel Spend"
+                    ],
+                    "filters": [],
+                    "properties": {}
+                },
+                {
+                    "id": "pie1",
+                    "name": "Carrier Market Share",
+                    "displayName": "Carrier Market Share",
+                    "type": "pie",
+                    "bounds": {
+                        "x": 0.36,
+                        "y": 0.65,
+                        "width": 0.3,
+                        "height": 0.3
+                    },
+                    "table": "Geography",
+                    "dimensions": [
+                        "Carrier"
+                    ],
+                    "measures": [
+                        "Total Carbon"
+                    ],
+                    "filters": [],
+                    "properties": {}
+                },
+                {
+                    "id": "funnel1",
+                    "name": "Supply Chain Efficiency",
+                    "displayName": "Supply Chain Efficiency",
+                    "type": "funnel",
+                    "bounds": {
+                        "x": 0.67,
+                        "y": 0.65,
+                        "width": 0.28,
+                        "height": 0.3
+                    },
+                    "table": "Carbon_Ops",
+                    "dimensions": [],
+                    "measures": [],
+                    "filters": [],
+                    "properties": {}
+                }
+            ]
+        },
+        {
+            "id": "page2",
+            "name": "Logistics Deep Dive",
+            "displayName": "Logistics Deep Dive",
+            "visuals": [
+                {
+                    "id": "map1",
+                    "name": "Global Shipment Density",
+                    "displayName": "Global Shipment Density",
+                    "type": "map",
+                    "bounds": {
+                        "x": 0.05,
+                        "y": 0.05,
+                        "width": 0.44,
+                        "height": 0.44
+                    },
+                    "table": "Geography",
+                    "dimensions": [
+                        "Latitude",
+                        "Longitude"
+                    ],
+                    "measures": [
+                        "Shipment Count"
+                    ],
+                    "filters": [],
+                    "properties": {}
+                },
+                {
+                    "id": "bubble1",
+                    "name": "Cost vs Carbon",
+                    "displayName": "Cost vs Carbon",
+                    "type": "bubble",
+                    "bounds": {
+                        "x": 0.51,
+                        "y": 0.05,
+                        "width": 0.44,
+                        "height": 0.44
+                    },
+                    "table": "Carbon_Ops",
+                    "dimensions": [
+                        "Carrier"
+                    ],
+                    "measures": [
+                        "Total Fuel Spend",
+                        "Total Carbon",
+                        "Shipment Count"
+                    ],
+                    "filters": [],
+                    "properties": {}
+                },
+                {
+                    "id": "matrix1",
+                    "name": "Route Performance Table",
+                    "displayName": "Route Performance Table",
+                    "type": "matrix",
+                    "bounds": {
+                        "x": 0.05,
+                        "y": 0.51,
+                        "width": 0.44,
+                        "height": 0.44
+                    },
+                    "table": "Geography",
+                    "dimensions": [
+                        "Region",
+                        "City",
+                        "Carrier"
+                    ],
+                    "measures": [
+                        "Total Carbon"
+                    ],
+                    "filters": [],
+                    "properties": {}
+                },
+                {
+                    "id": "ribbon1",
+                    "name": "Carrier Rank Trend",
+                    "displayName": "Carrier Rank Trend",
+                    "type": "ribbon",
+                    "bounds": {
+                        "x": 0.51,
+                        "y": 0.51,
+                        "width": 0.44,
+                        "height": 0.44
+                    },
+                    "table": "Carbon_Ops",
+                    "dimensions": [
+                        "Date",
+                        "Carrier"
+                    ],
+                    "measures": [
+                        "Total Carbon"
+                    ],
+                    "filters": [],
+                    "properties": {}
+                }
+            ]
+        }
+    ]
+}

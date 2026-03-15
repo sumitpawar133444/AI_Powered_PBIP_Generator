@@ -1,0 +1,95 @@
+{
+    "tables": [
+        {
+            "name": "Carbon_Ops",
+            "connection": {
+                "sourceType": "Snowflake",
+                "server": "sf-prod-west",
+                "database": "esg_data"
+            },
+            "columns": [
+                {
+                    "name": "ShipmentID",
+                    "dataType": "int64"
+                },
+                {
+                    "name": "RouteID",
+                    "dataType": "int64"
+                },
+                {
+                    "name": "Emission_MT",
+                    "dataType": "double"
+                },
+                {
+                    "name": "Fuel_Cost",
+                    "dataType": "double"
+                },
+                {
+                    "name": "Date",
+                    "dataType": "dateTime"
+                }
+            ]
+        },
+        {
+            "name": "Geography",
+            "connection": {
+                "sourceType": "SQLServer",
+                "server": "loc-sql-01",
+                "database": "master"
+            },
+            "columns": [
+                {
+                    "name": "RouteID",
+                    "dataType": "int64"
+                },
+                {
+                    "name": "City",
+                    "dataType": "text"
+                },
+                {
+                    "name": "Region",
+                    "dataType": "text"
+                },
+                {
+                    "name": "Latitude",
+                    "dataType": "double"
+                },
+                {
+                    "name": "Longitude",
+                    "dataType": "double"
+                },
+                {
+                    "name": "Carrier",
+                    "dataType": "text"
+                }
+            ]
+        }
+    ],
+    "measures": [
+        {
+            "name": "Total Carbon",
+            "formula": "SUM(Carbon_Ops[Emission_MT])"
+        },
+        {
+            "name": "Carbon Target",
+            "formula": "50000"
+        },
+        {
+            "name": "Total Fuel Spend",
+            "formula": "SUM(Carbon_Ops[Fuel_Cost])"
+        },
+        {
+            "name": "Shipment Count",
+            "formula": "COUNT(Carbon_Ops[ShipmentID])"
+        }
+    ],
+    "relationships": [
+        {
+            "fromTable": "Carbon_Ops",
+            "fromColumn": "RouteID",
+            "toTable": "Geography",
+            "toColumn": "RouteID",
+            "crossFilter": "both"
+        }
+    ]
+}
