@@ -1,8 +1,8 @@
 from Frontend.Power_BI_Visuals.DynamicElements.baseChart import BaseChart
 
 class LineChart(BaseChart):
-    def __init__(self, visual_id, visual_type, visual_defintion, visual_bounds, sheet_height, dimension_mapping) -> None:
-        super().__init__(visual_id, visual_type, visual_defintion, visual_bounds, sheet_height, dimension_mapping)
+    def __init__(self, visual_id, visual_type, visual_defintion, visual_bounds, dimension_mapping) -> None:
+        super().__init__(visual_id, visual_type, visual_defintion, visual_bounds, dimension_mapping)
 
     def build_projections(self, dimensions: list, measures: list) -> dict:
         projections = {

@@ -11,16 +11,6 @@ class BubbleChart(BaseChart):
             "Tooltips": {"projections": []}
         }
 
-        #Need to check if rowAttributes exists
-
-
-        # Series: rowAttributes → read datasetName directly
-        # for attr in rowAttributes:
-        #     entity = self._get_entity_from_attribute(attr)  # Gets "BU_Infoo"
-        #     projections["Series"]["projections"].append(
-        #         self.make_column_and_row_projection(entity, attr["name"])  # BU_Infoo.Bu_Key
-        #     )
-
         # Category: columnAttributes → read datasetName directly
         for attr in columnAttributes:
             entity = self._get_entity_from_attribute(attr)  # Gets "SalesData"

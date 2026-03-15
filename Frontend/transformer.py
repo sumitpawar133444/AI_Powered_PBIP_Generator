@@ -10,13 +10,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 class PowerBIDashboardGenerator:
-    def __init__(self, project_name, dashboard_meta_data):
+    def __init__(self, project_name, frontend_spec):
         self.project_name = project_name
-        self.sheets = dashboard_meta_data.get("sheets", {})
-        self.visuals = dashboard_meta_data.get("visuals", {})
-        self.dimensions = dashboard_meta_data.get("dimensions", {})
-        self.measures = dashboard_meta_data.get("measures", {})
-        self.master_objects = dashboard_meta_data.get("master_objects", {})
+        self.report_title = frontend_spec.get("title", project_name)
+        self.pages = frontend_spec.get("pages", [])
 
     def generate_complete_report(self):
         logger.info("Creating complete Power BI report structure...")
@@ -60,26 +57,51 @@ class PowerBIDashboardGenerator:
 
         pages_folder = self._create_pages_folder(definition_folder)
 
-        for sheet_id, sheet in self.sheets.items():
-            sheet_name = sheet.get("qMeta", {}).get("title", sheet_id)
-            sheet_height = sheet.get('height', 100)
+        for page in self.pages:
+            page_id = page.get("id")
+            page_name = page.get("name")
+            display_name = page.get("displayName")
+            visuals = page.get("visuals", [])
+            visual_id = visual.get("id")
+            visual_type = visual.get("type")
+
+            visual_bounds = visual.get("bounds", {
+                "x":0,
+                "y":0,
+                "width":300,
+                "height":200
+            })
 
             # Create page folder
-            page_folder = self._create_page_folder(pages_folder, sheet_id)
-            self._create_page_json(page_folder, sheet_id, sheet_name, sheet_height)
+            page_folder = self._create_page_folder(pages_folder, page_id)
+            self._create_page_json(
+                page_folder,
+                page_id,
+                page_name,
+                display_name,
+                visual_bounds.get("height", 200)
+            )
 
             visuals_folder = self._create_visuals_folder(page_folder)
 
-            child_items = sheet.get("cells", {})
+            for visual in visuals:
 
-            for item in child_items:
-                visual_id = item.get("name")
-                visual_type = item.get("type")
-                visual_bounds = item.get("bounds")
+                visual_id = visual.get("id")
+                visual_type = visual.get("type")
 
-                self._process_visual(visuals_folder, visual_id, visual_type, visual_bounds, sheet_height)
+                visual_bounds = visual.get("bounds", {
+                    "x":0,
+                    "y":0,
+                    "width":300,
+                    "height":200
+                })
 
-            logger.info(f"{sheet_id} → {len(child_items)} visuals processed")
+                self._process_visual(
+                    visuals_folder,
+                    visual,
+                )
+
+            logger.info(f"{page_id} → {len(visuals)} visuals processed")
 
         self._create_pages_json(pages_folder)
         logger.info(f"Complete: {self.output_folder.absolute()}")
@@ -218,15 +240,15 @@ class PowerBIDashboardGenerator:
             raise
         return page_folder
 
-    def _create_page_json(self, page_folder, sheet_id, sheet_name, sheet_height):
+    def _create_page_json(self, page_folder, page_id, page_name, display_name, height):
         BASE_WIDTH = 1280
-        BASE_HEIGHT = 591
-        calculated_height = (float(sheet_height) / 100.0) * BASE_HEIGHT
+        BASE_HEIGHT = 720
+        calculated_height = (float(height) / 100.0) * BASE_HEIGHT
         page_json = page_folder / "page.json"
         page_data = {
             "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
-            "name": sheet_id,
-            "displayName": sheet_name,
+            "name": page_id,
+            "displayName": display_name,
             "displayOption": "FitToPage",
             "height": calculated_height,
             "width": BASE_WIDTH
@@ -247,78 +269,28 @@ class PowerBIDashboardGenerator:
             raise
         return visuals_folder
 
-    def _build_complete_visual_definition(self, visual_id):
-        visual_def = self.visuals.get(visual_id)
-
-        if not visual_def:
-            raise ValueError(f"Visual {visual_id} not found")
-
-        extends_id = visual_def.get("qExtendsId")
-
-        if extends_id:
-            master_def = self.master_objects.get(extends_id)
-
-            if not master_def:
-                raise ValueError(f"Master object {extends_id} not found")
-
-            visual_def = copy.deepcopy(master_def)
-
-        else:
-            visual_def = copy.deepcopy(visual_def)
-
-        # 3️⃣ Now resolve hypercube from whichever definition we ended up with
-        hypercube = visual_def.get("qHyperCubeDef")
-
-        if hypercube:
-
-            # Resolve dimensions
-            resolved_dims = []
-            for dim in hypercube.get("qDimensions", []):
-                lib_id = dim.get("qLibraryId")
-                if lib_id:
-                    lib_dim = self.dimensions.get(lib_id)
-                    if not lib_dim:
-                        raise ValueError(f"Dimension {lib_id} not found")
-                    resolved_dims.append({
-                        "definition": copy.deepcopy(lib_dim),
-                        "source": "library",
-                        "libraryId": lib_id
-                    })
-                else:
-                    resolved_dims.append({
-                        "definition": copy.deepcopy(dim),
-                        "source": "inline",
-                        "libraryId": None
-                    })
-
-            hypercube["qDimensions"] = resolved_dims
-
-            # Resolve measures
-            resolved_measures = []
-            for measure in hypercube.get("qMeasures", []):
-                lib_id = measure.get("qLibraryId")
-                if lib_id:
-                    lib_measure = self.measures.get(lib_id)
-                    if not lib_measure:
-                        raise ValueError(f"Measure {lib_id} not found")
-                    resolved_measures.append({
-                        "definition": copy.deepcopy(lib_measure),
-                        "source": "library",
-                        "libraryId": lib_id
-                    })
-                else:
-                    resolved_measures.append({
-                        "definition": copy.deepcopy(measure),
-                        "source": "inline",
-                        "libraryId": None
-                    })
-
-            hypercube["qMeasures"] = resolved_measures
-
-        return visual_def
-
-    def _process_visual(self, visuals_folder, visual_id, visual_type, visual_bounds, sheet_height):
+    def _process_visual(self, visuals_folder, visual):
         """Uses existing VisualFactory"""
+        visual_id = visual.get("id")
+        visual_type = visual.get("type")
+
+        if not visual_id or not visual_type:
+            raise ValueError("Visual must contain id and type")
+            
+        visual_bounds = visual.get(
+            "bounds",
+            {
+                "x": 0,
+                "y": 0,
+                "width": 300,
+                "height": 200
+            }
+        )
+        table = visual.get("table")
+        dimensions = visual.get("dimensions", [])
+        measures = visual.get("measures", [])
+        filters = visual.get("filters", [])
+        properties = visual.get("properties", {})
         visual_folder = visuals_folder / visual_id
         try:
             visual_folder.mkdir(parents=True, exist_ok=True)
@@ -327,9 +299,20 @@ class PowerBIDashboardGenerator:
             raise
 
         try:
-            visual_definition = self._build_complete_visual_definition(visual_id)
+            visual_definition = {
+                "table": table,
+                "dimensions": dimensions,
+                "measures": measures,
+                "filters": filters,
+                "properties": properties
+            }
             visual_factory = VisualFactory()
-            visual_obj = visual_factory.create_visual(visual_id, visual_type, visual_definition, visual_bounds, sheet_height)
+            visual_obj = visual_factory.create_visual(
+                visual_id = visual_id,
+                visual_type = visual_type,
+                definition = visual_definition,
+                bounds = visual_bounds
+            )
             pbi_visual = visual_obj.generate_visual()
 
             clean_dict = pbi_visual.model_dump(
@@ -356,13 +339,13 @@ class PowerBIDashboardGenerator:
             # Ensure folder exists
             pages_folder.mkdir(parents=True, exist_ok=True)
 
-            if not self.sheets:
-                logger.warning("No sheets provided; creating empty pages.json")
+            if not self.pages:
+                logger.warning("No pages provided")
                 page_ids = []
                 active_page_id = ""
             else:
                 # List of all sheet IDs
-                page_ids = list(self.sheets.keys())
+                page_ids = [page["id"] for page in self.pages]
 
                 # Warn if rank missing
                 for sheet_id, layout in self.sheets.items():
@@ -372,10 +355,7 @@ class PowerBIDashboardGenerator:
                         )
 
                 # Find sheet with lowest rank
-                active_page_id = min(
-                    self.sheets,
-                    key=lambda k: self.sheets[k].get("rank", float("inf"))
-                )
+                active_page_id = page_ids[0] if page_ids else ""
 
             pages_json = {
                 "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
