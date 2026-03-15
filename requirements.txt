@@ -1,3 +1,7 @@
 google-generativeai,
 streamlit
 plotly
+pandas
+numpy
+plotly
+snowflake-snowpark-python
