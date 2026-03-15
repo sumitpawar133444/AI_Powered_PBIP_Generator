@@ -1,7 +1,10 @@
-google-generativeai,
+google-generativeai
 streamlit
 plotly
 pandas
 numpy
 plotly
+pydantic
+python-dotenv
+google-genai
 snowflake-snowpark-python
