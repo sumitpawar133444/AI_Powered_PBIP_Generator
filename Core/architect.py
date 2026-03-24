@@ -1,5 +1,6 @@
 # Core/architect.py
 import json
+import streamlit as st
 from google import genai
 from google.genai import types
 from prompts import ARCHITECT_SYSTEM_INSTRUCTION
@@ -9,7 +10,7 @@ import os
 
 # --- 1. LOAD ENVIRONMENT VARIABLES ---
 load_dotenv()
-API_KEY = os.getenv("GEMINI_API_KEY")
+API_KEY = st.secrets("GEMINI_API_KEY")
 
 # Initialize Client
 bypass_ssl()
