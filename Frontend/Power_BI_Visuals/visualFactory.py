@@ -7,6 +7,7 @@ from Frontend.Power_BI_Visuals.DynamicElements.lineChart import LineChart
 from Frontend.Power_BI_Visuals.DynamicElements.heatMap import HeatMap
 from Frontend.Power_BI_Visuals.DynamicElements.bubbleChart import BubbleChart
 from Frontend.Power_BI_Visuals.DynamicElements.kpi import KPI
+from Frontend.Power_BI_Visuals.DynamicElements.card import Card
 from Frontend.Power_BI_Visuals.DynamicElements.multiMetricKPI import MultiMetricKPI
 from Frontend.Power_BI_Visuals.DynamicElements.comparisonKPI import ComparisonKPI
 from Frontend.Power_BI_Visuals.baseVisual import BaseVisual
@@ -20,7 +21,7 @@ class VisualFactory:
         'line': LineChart,
         'pie': PieChart,
         'table': PivotTable,
-        'card': CardVisual,
+        'card': Card,
         'kpi': KPI,
         'gauge': Gauge,
         'treemap': HeatMap
