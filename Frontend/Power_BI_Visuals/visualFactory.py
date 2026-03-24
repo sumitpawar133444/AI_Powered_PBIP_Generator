@@ -19,7 +19,7 @@ class VisualFactory:
         'bar': BarChart,
         'line': LineChart,
         'pie': PieChart,
-        'table': TableVisual,
+        'table': PivotTable,
         'card': CardVisual,
         'kpi': KPI,
         'gauge': Gauge,
