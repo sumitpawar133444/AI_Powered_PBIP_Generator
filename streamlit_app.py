@@ -8,7 +8,7 @@ from Core.architect import update_project_spec
 from Backend.compiler import build_pbip_semantic_model, bundle_pbip_to_zip
 from Frontend.compiler import compile_to_pbip
 from Config.styles import inject_custom_css
-from Config.state import init_session_state
+from Config.state import init_session_state, create_new_chat
 from Modules.preview_engine import render_preview_content
 from Utils.file_io import save_specs_to_input_folder
 
