@@ -2,7 +2,7 @@ from Frontend.Power_BI_Visuals.DynamicElements.baseChart import BaseChart
 
 class Card(BaseChart):
     def __init__(self, visual_id, visual_type, visual_definition, visual_bounds) -> None:
-        super().__init__(, visual_id, visual_type, visual_definition, visual_bounds)
+        super().__init__(self, visual_id, visual_type, visual_definition, visual_bounds)
 
     def generate_visual_query(self):
         dataset = self.item.get('dataSet', 'DataSet')  # Fallback to 'DataSet' if not found
